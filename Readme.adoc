@@ -1,5 +1,4 @@
-Jetpack Menace (Sandbox hra)
-Autor: Adam Hoštička
+# Jetpack Menace - Sandbox hra
 
 ## Zadání
 
