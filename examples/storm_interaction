@@ -1,0 +1,25 @@
+Players {
+12CPlayerHuman,100,w,s,a,d,0,3,7,0
+9CPlayerAI,90,2,8,8,0
+9CPlayerAI,40,0,10,8,0
+}
+Objects {
+12CObjectStorm,0,7,0
+11CObjectTree,0,6,0
+12CObjectStorm,2,8,0
+12CObjectArmor,2,7,0
+12CObjectStorm,4,7,0
+11CObjectLava,4,6,0
+12CObjectStorm,6,8,0
+11CObjectLava,6,7,0
+11CObjectTree,6,6,0
+12CObjectStorm,8,9,0
+12CObjectStorm,10,9,0
+11CObjectLava,12,8,0
+12CObjectStorm,12,7,0
+12CObjectStorm,12,6,0
+11CObjectTree,12,5,0
+}
+Map {
+14,12,1,0
+}

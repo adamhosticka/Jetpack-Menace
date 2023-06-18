@@ -1,0 +1,10 @@
+Players {
+12CPlayerHuman,100,w,s,a,d,0,3,4,0
+}
+Objects {
+12CObjectArmor,5,2,0
+12CObjectArmor,7,7,0
+}
+Map {
+40,10,1,0
+}

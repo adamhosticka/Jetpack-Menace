@@ -1,0 +1,102 @@
+Jetpack Menace (Sandbox hra)
+Autor: Adam Hoštička
+
+## Zadání
+
+Naprogramujte jednoduchou 2D sandbox hru.
+
+Hra musí splňovat následující funkcionality
+
+ -  Implementujte hráče (postava, loď, ...) a jeho stav (energie, životy, brnění, skore, ...)
+ -  Vytvořte (soubojový) model zranění - alespoň dvě příčiny (pád z výšky, soubor s nepřítelem, pobyt v lávě, ...)
+ -  Vytvořte jednoduchý model prostředí (gravitace, přelévání vody (lávy), růst stromů, ...)
+ -  Naimplementujte načítání (konfigurace generátoru) mapy ze souboru a umožněte ukládat aktuální stav hry.
+
+Kde lze využít polymorfismus? (doporučené)
+
+ -  Postavy: hráč, zvířata, přítel (obchodník), nepřítel (různé druhy)
+ -  Efekty akcí: pád, úder, kontakt s lávou
+ -  Prostředí: vzduch, voda, hlína, uhlí, kov, láva, žebřík,...
+ -  Uživatelské rozhraní: konzole, ncurses, SDL, OpenGL (různé varianty), ...
+
+
+## Specifikace
+
+Jetpack Menace je sandbox hra, ve které hráč lítá prostorem kde se vznáší objekty, 
+zastrašuje nepřátele a snaží se přežít. Na jeho cestě ho mohou potkat nejen nepřátelé, 
+ale také nebezpečné přírodní jevy jako je láva nebo bouře. Hráči se nad hrací plochou 
+zobrazuje počet zabití a stav brnění. Při vstupy do lávy, vlétnutí do bouřky, nebo 
+konfrontaci s nepřátelem se budou probíhat různé interakce (kolize), jejichž důsledkem 
+může být snížení hráčova brnění nebo posun hráče. Pokud hráčovo brnění klesne až na 
+nulu, hra pro hráče končí. 
+Hra je i multiplayer a běží dokud je alespoň jeden z hráčů naživu.
+
+```
+> Enter a command ["help" for command info]:
+help
+> Help:
+    > start [gameName]
+    > load  [gameName]
+    > help
+    > quit
+> Enter a command ["help" for command info]:
+start prvniHra
+
+-- ostream clears
+
+Kills: 0
+Armor: 45
+##############################################################
+|          @~               @      ~      Y      R           |
+|    E     ~    ~          R         Y~       Y              |
+|                            Y             ~  @              |
+|          Y                   Y   @        @E               |
+|       Y          ~R                     E                  |
+|         Y   @      R                     Y     @           |
+|       @   @  Y           E@      R               ~~Y       |
+|  @       Y    ~        @                          E        |
+|       ~  ~     ~     ~            Y   R    RRY            R|
+|           Y          Y                    E     Y          |
+|     YR                 E     ~    R   R~       Y         R |
+|     ~        R                                            ~|
+|                           R            @                   |
+|   ~       ~  ~                Y        ~R                  |
+|      E              @   O            R  Y               R  |
+|                  ~                               R        E|
+|R  R     R  ~                    Y     ~       @~~  Y      R|
+|           E              ~    R~  REE           R     ~    |
+|                                  R           E        ~    |
+|  Y         ~    Y       R  R O                   ~         |
+##############################################################
+
+```
+
+Hráč se narodí uprostřed mapy a kolem něj se vygeneruje zbytek mapy. Mapa se dá také načíst
+ze souboru. Láva ubírá hráči brnění. Vlétnutí do bouře způsobí, že hráč ztratí kontrolu nad Jetpackem 
+a spadne na zem. Pád také ubírá brnění. Hráč si může zvýšit brnění sbíráním R na mapě, které se čas 
+od času přemístí. Hráč také může narazit na nepřítele E. Pokud ale bude jeho brnění dva a více krát 
+silnější než nepřítelovo, nepřítel se zalekne a zmizí. Pokud ne, proběhne souboj. Stromy slouží pouze 
+jako módní doplněk. Pokud se hráč chvíli nehýbe, působí na něj gravitace a začne pomalu slétávat dolů. 
+# značí stěnu, kterou se nedá prolétnout.
+| je stěna, kterou když hráč prolétne načte se další chunk
+
+
+## Polymorfismus:
+
+CPlayer:
+    Třída CPlayer je abstraktní třída, která bude mít dva potomky CPlayerHuman a CPlayerAI.
+    Třída CPlayer má polymorfní metodu CPlayer::Move, jejíž implementace se bude lišit mezi potomky.
+    CPlayerAI se bude hýbat pouze, pokud se k němu CPlayerHuman přiblíží, a to tak, že buď
+        se zalekne a uteče(zemře), nebo zůstane stát.
+    CPlayerHuman se bude hýbat podle pokynů uživatele, které přečte ze vstupu.
+
+    Polymorfismus nám zde umožní snadné přidání např. nové umělé inteligence, nebo hráče 
+    přes síť.
+
+CObject:
+    Třída CObject je abstratkní třída, jejíž potomci jsou CObjectLava, CObjectTree, CObjectStorm a CObjectArmor.
+    Polymorfismus uplatníme při volání metody CObject::Collision.
+    Metoda se bude lišit pro každého potomka, na základě interakce CPlayerHuman s daným CObjectem.
+
+    Díky polymorfismu bude kód kratší a přehlednější. Také díky němu budeme moci jednoduše přidat další objekt do 
+    hry, přidáním nového potomka třídy CObject.
